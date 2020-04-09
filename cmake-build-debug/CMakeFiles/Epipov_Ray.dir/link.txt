@@ -1,0 +1,1 @@
+/usr/bin/c++   -W -Wall -Werror -g   CMakeFiles/Epipov_Ray.dir/main.cpp.o CMakeFiles/Epipov_Ray.dir/Sources/Library/sfml.cpp.o CMakeFiles/Epipov_Ray.dir/Sources/Raytracing/intersections.cpp.o CMakeFiles/Epipov_Ray.dir/Sources/Raytracing/raytracer.cpp.o CMakeFiles/Epipov_Ray.dir/Sources/launcher.cpp.o  -o Epipov_Ray 
