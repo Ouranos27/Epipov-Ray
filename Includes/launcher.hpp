@@ -8,12 +8,11 @@
 #ifndef EPIPOV_RAY_LAUNCHER_HPP
     # define EPIPOV_RAY_LAUNCHER_HPP
 
-    # include "raytracer.hpp"
+    # include "tracer.hpp"
 
 class launcher {
     public:
         launcher();
-        launcher(const int &width, const int &height);
         launcher(const launcher &launch);
         ~launcher() = default;
 
@@ -21,13 +20,13 @@ class launcher {
         launcher &operator=(const launcher &launch);
 
     public:
-        [[nodiscard]] Raytracing::raytracer getRaytracer() const;
+        [[nodiscard]] Library::sfml   getLib() const;
 
     public:
-        void start();
+        void    laudFromArgument(int ac, char **av);
 
     private:
-        Raytracing::raytracer _raytracer;
+        Library::sfml   _lib;
 };
 
 #endif //EPIPOV_RAY_LAUNCHER_HPP

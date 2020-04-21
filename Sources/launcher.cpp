@@ -5,48 +5,59 @@
 ** Created by philippe,
 */
 
+#include <iostream>
+#include "params.hpp"
+#include "handler.hpp"
 #include "IGraphicalLibrary.hpp"
 #include "launcher.hpp"
 
 launcher::launcher()
-    : _raytracer()
-{}
-
-launcher::launcher(const int &width, const int &height)
-    : _raytracer(width, height)
+: _lib()
 {}
 
 launcher::launcher(const launcher &launch)
-    : _raytracer(launch.getRaytracer())
+: _lib(launch.getLib())
 {}
 
 launcher & launcher::operator=(const launcher &launch)
 {
-    _raytracer = launch.getRaytracer();
+    _lib = launch.getLib();
     return *this;
 }
 
-Gui::gui launcher::getGui() const
+Library::sfml launcher::getLib() const
 {
-    return _gui;
+    return _lib;
 }
 
-Raytracing::raytracer launcher::getRaytracer() const
+void launcher::laudFromArgument(int ac, char **av)
 {
-    return _raytracer;
-}
-
-void launcher::start() {
-
+    Loader::assimp  loader;
     Interfaces::IGraphicalLibrary::keys	key;
 
-    while(_raytracer.getLib().windowIsOpen()) {
-        key = _raytracer.getLib().getKey();
+    if (ac < 2)
+        exit(84);
+
+    std::cout << "Loading scene " << av[1] << "..." << std::endl;
+    if (!loader.loadFile(av[1]))
+        throw std::runtime_error("Usage: ./Epipov-Ray scene.dae");
+
+    auto   tracer = Tracing::tracer(loader);
+    Utils::vector2<unsigned int> resolution = tracer.getResolution();
+    Tracing::handler handler(tracer, resolution);
+
+    handler.start();
+    _lib.initWindow(resolution.x, resolution.y);
+    while(_lib.windowIsOpen()) {
+        key = _lib.getKey();
+        std::vector<Utils::color> pixels = handler.getPixels();
+        _lib.drawer(pixels);
         if (key == Interfaces::IGraphicalLibrary::ESC) {
-            _raytracer.getLib().closeWindow();
+            _lib.closeWindow();
+            handler.stop();
             break;
         }
-        _raytracer.getLib().clear();
-        _raytracer.getLib().refreshWindow();
+        //_lib.clear();
+        //_lib.refreshWindow();
     }
 }
